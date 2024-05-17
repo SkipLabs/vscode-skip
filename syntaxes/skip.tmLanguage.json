@@ -90,6 +90,9 @@
         },
         {
           "include": "#identifiers"
+        },
+        {
+          "include": "#operators"
         }
       ]
     },
@@ -146,6 +149,23 @@
           "comment": "Misplaced keyword already matched by another rule.",
           "match": "\\b(module)\\b",
           "name": "invalid.illegal.misplaced.skip"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "comment": "Hack to make bang operator more visible",
+          "match": "\\.?!(?!=)",
+          "name": "markup.bold.skip"
+        },
+        {
+          "match": "([+%?^]|/(?![/*])|\\*(?!\\*)|->?|~>|=>|[<>]=?|(!=|==?)(?!=)|&&?|\\|[|>]?|::?|@(?![[:lower:]]))",
+          "name": "keyword.operator.skip"
+        },
+        {
+          "match": "(!\\.|[=!]==|~[^>]|\\*\\*)",
+          "name": "invalid.illegal.skip"
         }
       ]
     },
