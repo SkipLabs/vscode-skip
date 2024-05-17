@@ -11,11 +11,8 @@ const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(
     document: vscode.TextDocument,
   ): vscode.TextEdit[] {
-    const fullText = document.getText();
-    const fullRange = new vscode.Range(
-      document.positionAt(0),
-      document.positionAt(fullText.length - 1),
-    );
+    const invalidRange = new vscode.Range(0, 0, document.lineCount, 0);
+    const fullRange = document.validateRange(invalidRange);
     try {
       const newText = formatSkipText(fullText);
 
