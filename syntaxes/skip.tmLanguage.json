@@ -2,7 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Skip",
   "scopeName": "source.skip",
-  "fileTypes": ["sk"],
+  "fileTypes": [
+    "sk"
+  ],
   "patterns": [
     {
       "include": "#file"
@@ -91,25 +93,56 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\b(try|throw|return|for|while|loop|match|if|else|children|as|async|await|catch|concurrent|overridable|throw|deferred|frozen|memoized|watch|from)\\b",
+          "match": "\\b(break|catch|do|else|for|if|loop|match|return|throw|try|while|yield)\\b",
           "name": "keyword.control.skip"
         },
         {
-          "match": "\\b(private|public|protected|final|const|extends|uses|base|readonly|mutable|native)\\b",
+          "match": "\\b(children|class(?!\\()|const|fun|macro|trait|type)\\b",
+          "name": "storage.type.skip"
+        },
+        {
+          "match": "\\b(as|await|in|is)\\b",
+          "name": "keyword.operator.skip"
+        },
+        {
+          "match": "\\b(async|base|deferred|extends|final|frozen|mutable|native|overridable|private|protected|public|readonly|static(?=[[:space:]]+[[:word:]])|untracked|uses)\\b",
           "name": "storage.modifier.skip"
         },
         {
-          "match": "\\b(this|static|class|fun|trait|type)\\b",
+          "match": "\\b(this|static(?=[[:space:]]*[^[:space:][:word:]]))\\b",
           "name": "variable.language.skip"
         },
         {
-          "match": "\\b(Int|Float|Bool|String|Map|Array|Option)\\b",
-          "name": "type.language.skip"
+          "match": "\\b(Array|Bool|Float|Int|Iterator|List|Map|Option|Sequence|String|Vector|void)\\b",
+          "name": "support.type.skip"
+        },
+        {
+          "match": "\\b(class(?=\\()|freeze|show|unsafe_chill_trust_me)\\b",
+          "name": "keyword.other.magic.skip"
+        },
+        {
+          "match": "\\b(Base|Class|Concrete|inspect)\\b",
+          "name": "keyword.other.skip"
+        },
+        {
+          "match": "#(?:(forEachField|forEachFunction|log|ThisClass|thisClassName)|([[:word:]]*))\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.other.macro.skip"
+            },
+            "2": {
+              "name": "source.variable.macro.skip"
+            }
+          }
+        },
+        {
+          "match": "(?<!\\bfun[[:space:]]+|\\.)\\b(chill|concurrent|memoized|null|watch)\\b",
+          "name": "invalid.deprecated.skip"
         },
         {
           "comment": "Misplaced keyword already matched by another rule.",
-          "match": "\\b(module|alias)\\b",
-          "name": "invalid.illegal.misplaced"
+          "match": "\\b(module)\\b",
+          "name": "invalid.illegal.misplaced.skip"
         }
       ]
     },
