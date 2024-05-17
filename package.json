@@ -2,18 +2,18 @@
   "name": "skip",
   "displayName": "SkipLang",
   "description": "Manage Skip Language",
+  "publisher": "skiplabs",
   "version": "0.0.2",
   "readme": "README.md",
   "author": {
     "name": "SkipLabs"
   },
   "engines": {
-    "vscode": "^1.41.0"
+    "vscode": "^1.89.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SkipLabs/skdb.git",
-    "directory": "ide/vscode/skip"
+    "url": "https://github.com/SkipLabs/vscode-skip.git"
   },
   "license": "MIT",
   "keywords": [
