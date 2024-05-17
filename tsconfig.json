@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    // Enable latest features
+    "lib": ["ES2022"],
+    "target": "ES2022",
+    "module": "Node16",
+    "allowJs": false,
+    "rootDir": "src",
+    "outDir": "out",
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    // Best practices
+    "strict": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
