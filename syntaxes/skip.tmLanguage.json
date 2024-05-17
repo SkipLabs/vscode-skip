@@ -93,6 +93,9 @@
         },
         {
           "include": "#operators"
+        },
+        {
+          "include": "#annotations"
         }
       ]
     },
@@ -151,6 +154,17 @@
           "name": "invalid.illegal.misplaced.skip"
         }
       ]
+    },
+    "annotations": {
+      "match": "@(?:(always_inline|cpp_export|cpp_extern|cpp_runtime|debug|disasm|export|intrinsic|may_alloc|no_inline|no_return|no_throw|synonym|test|wasm_export)|([[:lower:]][[:word:]]*))\\b",
+      "captures": {
+        "1": {
+          "name": "keyword.other.annotation.skip"
+        },
+        "2": {
+          "name": "invalid.illegal.annotation.skip"
+        }
+      }
     },
     "operators": {
       "patterns": [
