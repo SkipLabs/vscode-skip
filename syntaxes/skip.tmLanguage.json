@@ -1,6 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Skip",
+  "scopeName": "source.skip",
+  "fileTypes": ["sk"],
   "patterns": [
     {
       "include": "#code"
@@ -200,6 +202,5 @@
         }
       ]
     }
-  },
-  "scopeName": "source.skip"
+  }
 }
