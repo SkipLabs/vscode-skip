@@ -5,10 +5,70 @@
   "fileTypes": ["sk"],
   "patterns": [
     {
-      "include": "#code"
+      "include": "#file"
     }
   ],
   "repository": {
+    "file": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#modules"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "modules": {
+      "patterns": [
+        {
+          "name": "meta.module.skip",
+          "begin": "\\b(module)[[:space:]]+([[:word:]]+)[[:space:]]*;",
+          "end": "\\b(module)[[:space:]]+(end);",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.other.skip"
+            },
+            "2": {
+              "name": "entity.name.module.skip"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "keyword.other.skip"
+            },
+            "2": {
+              "name": "keyword.other.skip"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "match": "\\b(module)[[:space:]]+(alias)[[:space:]]+([[:word:]]+)[[:space:]]*=[[:space:]]*([[:word:]]+);",
+          "captures": {
+            "1": {
+              "name": "keyword.other.skip"
+            },
+            "2": {
+              "name": "keyword.other.skip"
+            },
+            "3": {
+              "name": "entity.name.module.skip"
+            },
+            "4": {
+              "name": "variable.other.module.skip"
+            }
+          }
+        }
+      ]
+    },
     "code": {
       "patterns": [
         {
@@ -31,7 +91,7 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\b(try|throw|return|for|while|loop|match|if|else|children|alias|as|async|await|catch|concurrent|overridable|throw|deferred|frozen|memoized|watch|from)\\b",
+          "match": "\\b(try|throw|return|for|while|loop|match|if|else|children|as|async|await|catch|concurrent|overridable|throw|deferred|frozen|memoized|watch|from)\\b",
           "name": "keyword.control.skip"
         },
         {
@@ -39,12 +99,17 @@
           "name": "storage.modifier.skip"
         },
         {
-          "match": "\\b(this|static|class|module|fun|trait|type)\\b",
+          "match": "\\b(this|static|class|fun|trait|type)\\b",
           "name": "variable.language.skip"
         },
         {
           "match": "\\b(Int|Float|Bool|String|Map|Array|Option)\\b",
           "name": "type.language.skip"
+        },
+        {
+          "comment": "Misplaced keyword already matched by another rule.",
+          "match": "\\b(module|alias)\\b",
+          "name": "invalid.illegal.misplaced"
         }
       ]
     },
