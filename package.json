@@ -1,25 +1,40 @@
 {
-    "name": "skip",
-    "displayName": "SkipLang",
-    "description": "Manage Skip Language",
-    "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.41.0"
-    },
-    "categories": [
-        "Programming Languages"
+  "name": "skip",
+  "displayName": "SkipLang",
+  "description": "Manage Skip Language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.41.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "skip",
+        "aliases": [
+          "Skip",
+          "skip"
+        ],
+        "extensions": [
+          ".sk"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
-    "contributes": {
-        "languages": [{
-            "id": "skip",
-            "aliases": ["Skip", "skip"],
-            "extensions": [".sk"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "skip",
-            "scopeName": "source.skip",
-            "path": "./syntaxes/skip.tmLanguage.json"
-        }]
-    }
+    "grammars": [
+      {
+        "language": "skip",
+        "scopeName": "source.skip",
+        "path": "./syntaxes/skip.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "fmt": "npx prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
 }
