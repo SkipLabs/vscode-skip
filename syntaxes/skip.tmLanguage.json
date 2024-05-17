@@ -1,0 +1,206 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Skip",
+	"patterns": [
+		{
+			"include": "#code"
+		}
+	],
+	"repository": {
+		"code": {
+			"patterns": [
+				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#constants"
+				},
+				{
+					"include": "#block"
+				},
+				{
+					"include": "#parenthesis"
+				}
+			]
+		},
+		"keywords":  {
+			"patterns": [
+				{
+					"match": "\\b(try|throw|return|for|while|loop|match|if|else|children|alias|as|async|await|catch|concurrent|overridable|throw|deferred|frozen|memoized|watch|from)\\b",
+					"name": "keyword.control.skip"
+				},
+				{
+					"match": "\\b(private|public|protected|final|const|extends|uses|base|readonly|mutable|native)\\b",
+					"name": "storage.modifier.skip"
+				},
+				{
+					"match": "\\b(this|static|class|module|fun|trait|type)\\b",
+					"name": "variable.language.skip"
+				},
+				{
+					"match": "\\b(Int|Float|Bool|String|Map|Array|Option)\\b",
+					"name": "type.language.skip"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.skip"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.skip"
+				},
+				{
+					"begin": "(^[ \\t]+)?(?=//)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.skip"
+						}
+					},
+					"end": "(?!\\G)",
+					"patterns": [
+						{
+							"begin": "//",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.comment.skip"
+								}
+							},
+							"end": "\\n",
+							"name": "comment.line.double-slash.skip"
+						}
+					]
+				}
+			]
+		},
+		"constants": {
+			"patterns": [
+				{
+					"match": "\\b(null|true|false)\\b",
+					"name": "constant.numeric.skip"
+				},
+				{
+					"match": "(?x)\n\\b(?<!\\$)\n0(x|X)\n(\n  (?<!\\.)[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?[Ll]?(?!\\.)\n  |\n  (\n    [0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\\.?\n    |\n    ([0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?)?\\.[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\n  )\n  [Pp][+-]?[0-9]([0-9_]*[0-9])?[FfDd]?\n)\n\\b(?!\\$)",
+					"name": "constant.numeric.hex.skip"
+				},
+				{
+					"match": "\\b(?<!\\$)0(b|B)[01]([01_]*[01])?[Ll]?\\b(?!\\$)",
+					"name": "constant.numeric.binary.skip"
+				},
+				{
+					"match": "\\b(?<!\\$)0[0-7]([0-7_]*[0-7])?[Ll]?\\b(?!\\$)",
+					"name": "constant.numeric.octal.skip"
+				},
+				{
+					"match": "(?x)\n(?<!\\$)\n(\n  \\b[0-9]([0-9_]*[0-9])?\\.\\B(?!\\.)\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  (?<!\\.)\\B\\.[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b(0|[1-9]([0-9_]*[0-9])?)(?!\\.)[Ll]?\\b\n)\n(?!\\$)",
+					"name": "constant.numeric.decimal.skip"
+				},
+				{
+					"match": "\\b[A-Z][a-zA-Z0-9_]*",
+					"name": "skip.languge.type"
+				},
+				{
+					"begin": "\"",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.skip"
+						}
+					},
+					"end": "\"",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.skip"
+						}
+					},
+					"name": "string.quoted.double.skip",
+					"patterns": [
+						{
+							"match": "\\\\.",
+							"name": "constant.character.escape.skip"
+						}
+					]
+				},
+				{
+					"begin": "`",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.skip"
+						}
+					},
+					"end": "`",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.skip"
+						}
+					},
+					"name": "string.quoted.back.skip",
+					"patterns": [
+						{
+							"match": "\\\\.",
+							"name": "constant.character.escape.skip"
+						}
+					]
+				},
+				{
+					"begin": "'",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.begin.skip"
+						}
+					},
+					"end": "'",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.end.skip"
+						}
+					},
+					"name": "string.quoted.single.skip",
+					"patterns": [
+						{
+							"match": "\\\\.",
+							"name": "constant.character.escape.skip"
+						}
+					]
+				}
+			]
+		},
+		"parenthesis": {
+			"patterns": [
+				{
+					"begin": "\\(",
+					"end": "\\)",
+					"name": "meta.parenthesis.skip",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		},
+		"block": {
+			"patterns": [
+				{
+					"begin": "{",
+					"end": "}",
+					"name": "meta.block.skip",
+					"patterns": [
+						{
+							"include": "#code"
+						}
+					]
+				}
+			]
+		}
+	},
+	"scopeName": "source.skip"
+}
