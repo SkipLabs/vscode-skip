@@ -87,6 +87,9 @@
         },
         {
           "include": "#parenthesis"
+        },
+        {
+          "include": "#identifiers"
         }
       ]
     },
@@ -178,6 +181,27 @@
               "name": "comment.line.double-slash.skip"
             }
           ]
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "comment": "Wildcard underscore",
+          "match": "\\b_\\b",
+          "name": "constant.language.wildcard.skip"
+        },
+        {
+          "match": "\\b[A-Z][a-zA-Z0-9_]*",
+          "name": "source.variable.type.skip"
+        },
+        {
+          "match": "\\b[A-Za-z_][[:word:]]+\\b",
+          "name": "source.variable.skip"
+        },
+        {
+          "match": "$[[:word:]]+\\b",
+          "name": "invalid.illegal.identifier.skip"
         }
       ]
     },
