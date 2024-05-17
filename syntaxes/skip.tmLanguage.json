@@ -243,8 +243,7 @@
           "name": "string.quoted.double.skip",
           "patterns": [
             {
-              "match": "\\\\.",
-              "name": "constant.character.escape.skip"
+              "include": "#characters"
             }
           ]
         },
@@ -255,17 +254,25 @@
               "name": "punctuation.definition.string.begin.skip"
             }
           },
-          "end": "`",
+          "end": "(?<!\\\\)`",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.string.end.skip"
             }
           },
-          "name": "string.quoted.back.skip",
+          "name": "string.interpolated.skip",
           "patterns": [
             {
-              "match": "\\\\.",
-              "name": "constant.character.escape.skip"
+              "include": "#characters"
+            },
+            {
+              "begin": "(?<!\\\\)\\$\\{",
+              "end": "}",
+              "patterns": [
+                {
+                  "include": "#code"
+                }
+              ]
             }
           ]
         },
@@ -285,10 +292,21 @@
           "name": "string.quoted.single.skip",
           "patterns": [
             {
-              "match": "\\\\.",
-              "name": "constant.character.escape.skip"
+              "include": "#characters"
             }
           ]
+        }
+      ]
+    },
+    "characters": {
+      "patterns": [
+        {
+          "match": "\\\\([abefnrtv\\\\'\"0${`]|x..|u.{4}|U.{8})",
+          "name": "constant.character.escape.skip"
+        },
+        {
+          "match": "\\\\([^abefnrtv\\\\'\"0${`xuU]|\\z)",
+          "name": "invalid.illegal.character.escape.skip"
         }
       ]
     },
