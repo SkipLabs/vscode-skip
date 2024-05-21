@@ -2,21 +2,22 @@ import * as vscode from "vscode";
 import * as which from "which";
 import { execSync } from "child_process";
 
-function formatSkipFile(fileName: string): string {
+function formatSkipFile(fileName: string, fileContents: string): string {
   const skfmt = which.sync("skfmt");
-  const command = `"${skfmt}" "${fileName}"`;
+  const command = `"${skfmt}" --filename "${fileName}"`;
   console.log(command);
-  return execSync(command, { encoding: "ascii" });
+  return execSync(command, { encoding: "ascii", input: fileContents });
 }
 
 const documentFormattingEditProvider = {
   provideDocumentFormattingEdits(
     document: vscode.TextDocument,
   ): vscode.TextEdit[] {
+    const fullText = document.getText();
     const invalidRange = new vscode.Range(0, 0, document.lineCount, 0);
     const fullRange = document.validateRange(invalidRange);
     try {
-      const newText = formatSkipFile(document.fileName);
+      const newText = formatSkipFile(document.fileName, fullText);
 
       return [vscode.TextEdit.replace(fullRange, newText)];
     } catch (error) {

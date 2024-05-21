@@ -8,7 +8,7 @@ Skip language support.
 
 ## Requirements
 
-None.
+Latest version of `skfmt`.
 
 ## Extension Settings
 
