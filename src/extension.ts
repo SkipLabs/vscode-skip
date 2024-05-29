@@ -84,6 +84,46 @@ const documentSymbolProvider = {
   }
 };
 
+const findDefinitionsInDocument = (document: vscode.TextDocument, word: string): vscode.Location[] => {
+  const symbolRE = new RegExp(`(?:\\b(?:class|const|fun|module|trait|type)\\s+|[|]\\s*)[.]?${word}\\b`, 'dg');
+  const text = document.getText();
+  const results = [];
+  let match;
+  while ((match = symbolRE.exec(text)) !== null) {
+    const pos = document.positionAt(match.index);
+    results.push(new vscode.Location(document.uri, pos));
+  }
+  return results;
+}
+
+const documentDefinitionProvider = {
+  async provideDefinition(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.Location[]> {
+    const range = document.getWordRangeAtPosition(position);
+    if (range === undefined) {
+      return [];
+    }
+    const word = document.getText(range);
+    const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100);
+
+    const results = [];
+    let seenThisDocument = false;
+    for (const file of files) {
+      let fileDocument;
+      if (file === document.uri) {
+        seenThisDocument = true;
+        fileDocument = document;
+      } else {
+        fileDocument = await vscode.workspace.openTextDocument(file);
+      }
+      results.push(findDefinitionsInDocument(fileDocument, word));
+    }
+    if (!seenThisDocument) {
+      results.push(findDefinitionsInDocument(document, word));
+    }
+    return results.flat();
+  }
+};
+
 export function activate(context: vscode.ExtensionContext) {
   console.log("Skip extension is alive!");
 
@@ -100,6 +140,12 @@ export function activate(context: vscode.ExtensionContext) {
     documentSymbolProvider,
   );
   context.subscriptions.push(symbolProviderDisposable);
+
+  const definitionProviderDisposable = vscode.languages.registerDefinitionProvider(
+    skipBuffers,
+    documentDefinitionProvider,
+  );
+  context.subscriptions.push(definitionProviderDisposable);
 }
 
 export function deactivate() {
