@@ -29,15 +29,77 @@ const documentFormattingEditProvider = {
   },
 };
 
+const documentSymbolProvider = {
+  provideDocumentSymbols(
+    document: vscode.TextDocument,
+  ): vscode.SymbolInformation[] {
+    const symbolRE = /(?:\b(?<kind>class|const|fun|module|trait|type)\s+|(?<child>[|])\s*)[.]?(?<name>\w+)/dg;
+
+    const results = [];
+    let currentModule = undefined;
+    let currentClass = undefined;
+
+    for (const match of document.getText().matchAll(symbolRE)) {
+      const groups = match.groups;
+      const indices = match.indices?.groups;
+      if (groups === undefined || indices === undefined) {
+        continue;
+      }
+
+      const rawKind = groups['kind'] ?? groups['child'];
+      const name = groups['name'];
+      const nameIndices = indices['name'];
+      if (rawKind === 'module' && name === 'end') {
+        currentModule = undefined;
+        currentClass = undefined;
+        continue;
+      }
+
+      if (name === undefined || nameIndices === undefined) {
+        continue;
+      }
+
+      const kind = (rawKind === 'class' || rawKind === '|') ? vscode.SymbolKind.Class :
+        rawKind === 'const' ? vscode.SymbolKind.Constant :
+          rawKind === 'fun' ? (currentClass !== undefined ? vscode.SymbolKind.Method : vscode.SymbolKind.Function) :
+            rawKind === 'module' ? vscode.SymbolKind.Module :
+              rawKind === 'trait' ? vscode.SymbolKind.Class :
+                rawKind === 'type' ? vscode.SymbolKind.Struct : undefined;
+      if (kind === undefined) {
+        continue;
+      }
+      // TODO: the range should actually be the range of the module, class, function, etc... not of the symbol name
+      const range = new vscode.Range(document.positionAt(nameIndices[0]), document.positionAt(nameIndices[1]));
+      const location = new vscode.Location(document.uri, range);
+      const containerName = currentClass ?? currentModule ?? '';
+      results.push(new vscode.SymbolInformation(name, kind, containerName, location));
+      if (rawKind === 'module') {
+        currentModule = name;
+        currentClass = undefined;
+      } else if (rawKind === 'class' || rawKind === 'trait') {
+        currentClass = name;
+      }
+    }
+    return results;
+  }
+};
+
 export function activate(context: vscode.ExtensionContext) {
   console.log("Skip extension is alive!");
 
-  const disposable = vscode.languages.registerDocumentFormattingEditProvider(
-    { language: "skip" },
+  const skipBuffers = { language: "skip" };
+
+  const formatterDisposable = vscode.languages.registerDocumentFormattingEditProvider(
+    skipBuffers,
     documentFormattingEditProvider,
   );
+  context.subscriptions.push(formatterDisposable);
 
-  context.subscriptions.push(disposable);
+  const symbolProviderDisposable = vscode.languages.registerDocumentSymbolProvider(
+    skipBuffers,
+    documentSymbolProvider,
+  );
+  context.subscriptions.push(symbolProviderDisposable);
 }
 
 export function deactivate() {
