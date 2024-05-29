@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
   console.log("Skip extension is alive!");
 
   const disposable = vscode.languages.registerDocumentFormattingEditProvider(
-    { scheme: "file", language: "skip" },
+    { language: "skip" },
     documentFormattingEditProvider,
   );
 
