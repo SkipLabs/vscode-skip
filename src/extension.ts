@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 
 function formatSkipFile(fileName: string, fileContents: string): string {
   const skfmt = which.sync("skfmt");
-  const command = `"${skfmt}" --filename "${fileName}"`;
+  const command = `"${skfmt}" --assume-filename "${fileName}"`;
   console.log(command);
   return execSync(command, { encoding: "ascii", input: fileContents });
 }
