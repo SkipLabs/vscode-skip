@@ -102,23 +102,16 @@ const documentDefinitionProvider = {
     if (range === undefined) {
       return [];
     }
-    const word = document.getText(range);
     const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100);
+    const word = document.getText(range);
 
-    const results = [];
-    let seenThisDocument = false;
+    const results = [findDefinitionsInDocument(document, word)];
     for (const file of files) {
-      let fileDocument;
       if (file === document.uri) {
-        seenThisDocument = true;
-        fileDocument = document;
-      } else {
-        fileDocument = await vscode.workspace.openTextDocument(file);
+        continue;
       }
+      const fileDocument = await vscode.workspace.openTextDocument(file);
       results.push(findDefinitionsInDocument(fileDocument, word));
-    }
-    if (!seenThisDocument) {
-      results.push(findDefinitionsInDocument(document, word));
     }
     return results.flat();
   }
