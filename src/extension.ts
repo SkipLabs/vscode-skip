@@ -6,7 +6,7 @@ function formatSkipFile(fileName: string, fileContents: string): string {
   const skfmt = which.sync("skfmt");
   const command = `"${skfmt}" --assume-filename "${fileName}"`;
   console.log(command);
-  return execSync(command, { encoding: "ascii", input: fileContents });
+  return execSync(command, { encoding: "utf8", input: fileContents });
 }
 
 const documentFormattingEditProvider = {
