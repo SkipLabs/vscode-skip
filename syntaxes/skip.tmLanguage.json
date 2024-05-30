@@ -112,7 +112,7 @@
           "name": "keyword.operator.skip"
         },
         {
-          "match": "\\b(async|base(?=.+class\\b)|deferred|extends|final|frozen|mutable|native|overridable|private|protected|public|readonly|static(?=[[:space:]]+[[:word:]])|untracked|uses|value)\\b",
+          "match": "\\b(async|base(?=.+class\\b)|deferred|extends|extension|final|frozen|mutable|native|overridable|private|protected|public|readonly|static(?=[[:space:]]+[[:word:]])|untracked|uses|value)\\b",
           "name": "storage.modifier.skip"
         },
         {
