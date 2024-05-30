@@ -84,12 +84,14 @@ const documentSymbolProvider = {
   }
 };
 
-const findDefinitionsInDocument = (document: vscode.TextDocument, word: string): vscode.Location[] => {
+const findDefinitionsInDocument = (document: vscode.TextDocument, word: string, token: vscode.CancellationToken): vscode.Location[] => {
   const symbolRE = new RegExp(`(?:\\b(?:class|const|fun|module|trait|type)\\s+|[|]\\s*)[.]?${word}\\b`, 'dg');
   const text = document.getText();
   const results = [];
   let match;
   while ((match = symbolRE.exec(text)) !== null) {
+    if (token.isCancellationRequested)
+      break;
     const pos = document.positionAt(match.index);
     results.push(new vscode.Location(document.uri, pos));
   }
@@ -105,13 +107,18 @@ const documentDefinitionProvider = {
     const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100, token);
     const word = document.getText(range);
 
-    const results = [findDefinitionsInDocument(document, word)];
+    if (token.isCancellationRequested)
+      return [];
+
+    const results = [findDefinitionsInDocument(document, word, token)];
     for (const file of files) {
+      if (token.isCancellationRequested)
+        break;
       if (file === document.uri) {
         continue;
       }
       const fileDocument = await vscode.workspace.openTextDocument(file);
-      results.push(findDefinitionsInDocument(fileDocument, word));
+      results.push(findDefinitionsInDocument(fileDocument, word, token));
     }
     return results.flat();
   }
