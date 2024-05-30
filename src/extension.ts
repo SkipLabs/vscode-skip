@@ -104,7 +104,9 @@ const documentDefinitionProvider = {
     if (range === undefined) {
       return [];
     }
-    const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100, token);
+    const inTests = /(^|[/])tests[/]/.test(document.fileName);
+    const exclude = inTests ? '**/target/**' : '**/{target,tests}/**';
+    const files = await vscode.workspace.findFiles('**/*.sk', exclude, 100, token);
     const word = document.getText(range);
 
     if (token.isCancellationRequested)
