@@ -97,12 +97,12 @@ const findDefinitionsInDocument = (document: vscode.TextDocument, word: string):
 }
 
 const documentDefinitionProvider = {
-  async provideDefinition(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.Location[]> {
+  async provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Location[]> {
     const range = document.getWordRangeAtPosition(position);
     if (range === undefined) {
       return [];
     }
-    const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100);
+    const files = await vscode.workspace.findFiles('**/*.sk', '**/target/**', 100, token);
     const word = document.getText(range);
 
     const results = [findDefinitionsInDocument(document, word)];
