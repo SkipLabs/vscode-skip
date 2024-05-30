@@ -84,18 +84,18 @@ const documentSymbolProvider = {
   }
 };
 
-const findDefinitionsInDocument = (document: vscode.TextDocument, word: string, token: vscode.CancellationToken): vscode.Location[] => {
+const addDefinitionsInDocument = (add: (loc: vscode.Location) => boolean, document: vscode.TextDocument, word: string, token: vscode.CancellationToken): boolean => {
   const symbolRE = new RegExp(`(?:\\b(?:class|const|fun|module|trait|type)\\s+|[|]\\s*)[.]?${word}\\b`, 'dg');
   const text = document.getText();
-  const results = [];
   let match;
   while ((match = symbolRE.exec(text)) !== null) {
     if (token.isCancellationRequested)
-      break;
+      return false;
     const pos = document.positionAt(match.index);
-    results.push(new vscode.Location(document.uri, pos));
+    if (!add(new vscode.Location(document.uri, pos)))
+      return false;
   }
-  return results;
+  return true;
 }
 
 const documentDefinitionProvider = {
@@ -104,25 +104,31 @@ const documentDefinitionProvider = {
     if (range === undefined) {
       return [];
     }
+    const MAX_RESULTS = 100;
+    const MAX_FILES_TO_SEARCH = 200;
     const inTests = /(^|[/])tests[/]/.test(document.fileName);
     const exclude = inTests ? '**/target/**' : '**/{target,tests}/**';
-    const files = await vscode.workspace.findFiles('**/*.sk', exclude, 100, token);
+    const files = await vscode.workspace.findFiles('**/*.sk', exclude, MAX_FILES_TO_SEARCH, token);
     const word = document.getText(range);
 
     if (token.isCancellationRequested)
       return [];
 
-    const results = [findDefinitionsInDocument(document, word, token)];
-    for (const file of files) {
-      if (token.isCancellationRequested)
-        break;
-      if (file === document.uri) {
-        continue;
+    const results: vscode.Location[] = [];
+    const add = (loc: vscode.Location): boolean => { results.push(loc); return (results.length <= MAX_RESULTS); };
+    if (addDefinitionsInDocument(add, document, word, token)) {
+      for (const file of files) {
+        if (token.isCancellationRequested)
+          break;
+        if (file === document.uri) {
+          continue;
+        }
+        const fileDocument = await vscode.workspace.openTextDocument(file);
+        if (!addDefinitionsInDocument(add, fileDocument, word, token))
+          break;
       }
-      const fileDocument = await vscode.workspace.openTextDocument(file);
-      results.push(findDefinitionsInDocument(fileDocument, word, token));
     }
-    return results.flat();
+    return results;
   }
 };
 
