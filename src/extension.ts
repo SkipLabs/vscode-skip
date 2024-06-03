@@ -33,7 +33,7 @@ const documentSymbolProvider = {
   provideDocumentSymbols(
     document: vscode.TextDocument,
   ): vscode.SymbolInformation[] {
-    const symbolRE = /(?:\b(?<kind1>class|const|fun|module|trait|type)\s+\.?(?<name1>\w+)|(?<kind2>\|)\s*\.?(?<name2>\w+)\s*\((?!.+->))/dg;
+    const symbolRE = /(?<!\/\/\s*)(?:\b(?<kind1>class|const|fun|module|trait|type)\s+\.?(?<name1>\w+)|(?<kind2>\|)\s*\.?(?<name2>\w+)\s*\((?!.+->))/dg;
 
     const results = [];
     let currentModule = undefined;
@@ -85,7 +85,7 @@ const documentSymbolProvider = {
 };
 
 const addDefinitionsInDocument = (add: (loc: vscode.Location) => boolean, document: vscode.TextDocument, word: string, token: vscode.CancellationToken): boolean => {
-  const symbolRE = new RegExp(`(?:\\b(?:class|const|fun|module|trait|type)\\s+\\.?${word}\\b|\\|\\s*\\.?${word}\\s*\\((?!.+->))`, 'dg');
+  const symbolRE = new RegExp(`(?<!\\/\\/\\s*)(?:\\b(?:class|const|fun|module|trait|type)\\s+\\.?${word}\\b|\\|\\s*\\.?${word}\\s*\\((?!.+->))`, 'dg');
   const text = document.getText();
   let match;
   while ((match = symbolRE.exec(text)) !== null) {
