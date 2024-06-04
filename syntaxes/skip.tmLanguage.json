@@ -100,7 +100,7 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\b(break|catch|do|else|for|if|loop|match|return|throw|try|while|yield)\\b",
+          "match": "\\b(break|catch|continue|do|else|for|if|loop|match|return|throw|try|while|yield)\\b",
           "name": "keyword.control.skip"
         },
         {
@@ -120,7 +120,7 @@
           "name": "variable.language.skip"
         },
         {
-          "match": "\\b(Array|Bool|Float|Int|Iterator|List|Map|Option|Sequence|String|Vector|void)\\b",
+          "match": "\\b(Array|Bool|Char|Float|Int|Iterator|List|Map|Option|Sequence|String|Vector|void)\\b",
           "name": "support.type.skip"
         },
         {
