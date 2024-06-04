@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as which from "which";
+import which from "which";
 import { execSync } from "child_process";
 
 function formatSkipFile(fileName: string, fileContents: string): string {
