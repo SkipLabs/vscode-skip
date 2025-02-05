@@ -116,11 +116,11 @@
           "name": "storage.modifier.skip"
         },
         {
-          "match": "\\b(this|static(?=[[:space:]]*[^[:space:][:word:]]))\\b",
+          "match": "\\b(inst|this|static(?=[[:space:]]*[^[:space:][:word:]]))\\b",
           "name": "variable.language.skip"
         },
         {
-          "match": "\\b(Array|Bool|Char|Float|Int|Iterator|List|Map|Option|Sequence|String|Vector|void)\\b",
+          "match": "\\b(Array|Bool|Char|Float|Int|Iterator|List|Map|Option|Sequence|Set|String|Vector|void)\\b",
           "name": "support.type.skip"
         },
         {
@@ -128,7 +128,7 @@
           "name": "keyword.other.magic.skip"
         },
         {
-          "match": "\\b(Base|Class|Concrete|inspect)\\b",
+          "match": "\\b(Base|Class|Concrete|from|inspect)\\b",
           "name": "keyword.other.skip"
         },
         {
